@@ -4,12 +4,20 @@
 <meta charset="utf-8">
 <title>compsci flashcards</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<script>
+    // Apply persisted theme override before paint to avoid a flash.
+    (function () {
+        var t = localStorage.getItem('flashcards_theme');
+        if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t);
+    })();
+</script>
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 <header>
     <h1>compsci flashcards</h1>
     <span id="stats"></span>
+    <button id="themeBtn" title="cycle auto / light / dark">theme: auto</button>
     <button id="resetBtn" title="wipe local progress">reset</button>
 </header>
 <main id="stage"></main>

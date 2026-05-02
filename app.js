@@ -8,6 +8,8 @@
 // `<deck>:<id>`, so editing the .db preserves progress for unchanged ids.
 
 const STORAGE_KEY        = 'flashcards_sr_v1';
+const THEME_KEY          = 'flashcards_theme';
+const THEME_CYCLE        = ['auto', 'light', 'dark'];
 const DB_CACHE_NAME      = 'flashcards_db_cache';
 const DB_CACHE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const SQL_JS_BASE        = 'https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/';
@@ -267,9 +269,36 @@ async function reset() {
     render();
 }
 
+// ---------- Theme ----------
+
+function getTheme() {
+    const t = localStorage.getItem(THEME_KEY);
+    return THEME_CYCLE.includes(t) ? t : 'auto';
+}
+
+function applyTheme(t) {
+    if (t === 'auto') {
+        localStorage.removeItem(THEME_KEY);
+        document.documentElement.removeAttribute('data-theme');
+    } else {
+        localStorage.setItem(THEME_KEY, t);
+        document.documentElement.setAttribute('data-theme', t);
+    }
+    const btn = el('themeBtn');
+    if (btn) btn.textContent = `theme: ${t}`;
+}
+
+function cycleTheme() {
+    const cur  = getTheme();
+    const next = THEME_CYCLE[(THEME_CYCLE.indexOf(cur) + 1) % THEME_CYCLE.length];
+    applyTheme(next);
+}
+
 // ---------- Boot ----------
 
 async function boot() {
+    applyTheme(getTheme());
+    el('themeBtn').onclick = cycleTheme;
     el('stage').innerHTML = '<div class="loading">loading cards…</div>';
     try {
         cards    = await loadDecks();
