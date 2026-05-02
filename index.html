@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>compsci flashcards</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+    <h1>compsci flashcards</h1>
+    <span id="stats"></span>
+    <button id="resetBtn" title="wipe local progress">reset</button>
+</header>
+<main id="stage"></main>
+<script>
+    // List of SQLite .db files to load. Add more decks here.
+    window.DECKS = ['cards/compsci.db'];
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/sql-wasm.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
