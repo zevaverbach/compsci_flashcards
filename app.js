@@ -285,7 +285,10 @@ function resolveDark(theme) {
 function applyTheme(t) {
     if (t === 'auto') localStorage.removeItem(THEME_KEY);
     else              localStorage.setItem(THEME_KEY, t);
-    document.documentElement.classList.toggle('dark-mode', resolveDark(t));
+    const dark = resolveDark(t);
+    const html = document.documentElement;
+    html.classList.remove('light-mode', 'dark-mode');
+    html.classList.add(dark ? 'dark-mode' : 'light-mode');
     const btn = el('themeBtn');
     if (btn) btn.textContent = `theme: ${t}`;
 }

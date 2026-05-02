@@ -1,8 +1,10 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 
-/* Light is the default. JS adds .dark-mode on <html> for dark. */
-:root {
+/* Both modes use explicit classes — JS always sets one of `light-mode` or
+ * `dark-mode` on <html>, so there is no ambiguous default state.
+ */
+:root.light-mode {
     color-scheme: light;
     --bg:           #fff;
     --fg:           #000;
@@ -39,6 +41,9 @@ html, body { margin: 0; padding: 0; }
     --notes-border: #666;
     --error:        #f88;
 }
+
+/* Set bg on html too so the area outside the centered body matches. */
+html { background: var(--bg); }
 
 body {
     font-family: ui-monospace, Menlo, Consolas, monospace;

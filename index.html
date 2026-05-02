@@ -1,19 +1,23 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="light-mode">
 <head>
 <meta charset="utf-8">
 <title>compsci flashcards</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
 <script>
-    // Resolve theme to a concrete light/dark class before paint, to avoid a flash.
+    // Resolve theme to a concrete class before paint, to avoid a flash and to
+    // explicitly override the "light-mode" default class on <html>.
     (function () {
         var t = localStorage.getItem('flashcards_theme');
         var dark = (t === 'dark') || (t !== 'light' && window.matchMedia &&
                    window.matchMedia('(prefers-color-scheme: dark)').matches);
-        if (dark) document.documentElement.classList.add('dark-mode');
+        var html = document.documentElement;
+        html.classList.remove('light-mode', 'dark-mode');
+        html.classList.add(dark ? 'dark-mode' : 'light-mode');
     })();
 </script>
-<link rel="stylesheet" href="styles.css?v=2">
+<link rel="stylesheet" href="styles.css?v=3">
 </head>
 <body>
 <header>
@@ -28,6 +32,6 @@
     window.DECKS = ['cards/compsci.db'];
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.11.0/sql-wasm.js"></script>
-<script src="app.js?v=2"></script>
+<script src="app.js?v=3"></script>
 </body>
 </html>
