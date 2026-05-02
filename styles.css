@@ -1,6 +1,7 @@
 * { box-sizing: border-box; }
 html, body { margin: 0; padding: 0; }
 
+/* Light is the default. JS adds .dark-mode on <html> for dark. */
 :root {
     color-scheme: light;
     --bg:           #fff;
@@ -20,45 +21,23 @@ html, body { margin: 0; padding: 0; }
     --error:        #a00;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        color-scheme: dark;
-        --bg:           #111;
-        --fg:           #e8e8e8;
-        --muted:        #999;
-        --border:       #888;
-        --panel-bg:     #1a1a1a;
-        --input-bg:     #1a1a1a;
-        --button-bg:    #222;
-        --button-bg-h:  #2e2e2e;
-        --user-bg:      #181818;
-        --user-fg:      #bbb;
-        --user-border:  #555;
-        --back-bg:      #14241a;
-        --notes-bg:     #2a2410;
-        --notes-border: #666;
-        --error:        #f88;
-    }
-}
-
-:root[data-theme="light"] {
-    color-scheme: light;
-    --bg: #fff; --fg: #000; --muted: #555; --border: #000;
-    --panel-bg: #fafafa; --input-bg: #fff;
-    --button-bg: #eee; --button-bg-h: #ddd;
-    --user-bg: #f6f6f6; --user-fg: #333; --user-border: #999;
-    --back-bg: #eef7ee; --notes-bg: #fffbe6; --notes-border: #888;
-    --error: #a00;
-}
-
-:root[data-theme="dark"] {
+:root.dark-mode {
     color-scheme: dark;
-    --bg: #111; --fg: #e8e8e8; --muted: #999; --border: #888;
-    --panel-bg: #1a1a1a; --input-bg: #1a1a1a;
-    --button-bg: #222; --button-bg-h: #2e2e2e;
-    --user-bg: #181818; --user-fg: #bbb; --user-border: #555;
-    --back-bg: #14241a; --notes-bg: #2a2410; --notes-border: #666;
-    --error: #f88;
+    --bg:           #111;
+    --fg:           #e8e8e8;
+    --muted:        #999;
+    --border:       #888;
+    --panel-bg:     #1a1a1a;
+    --input-bg:     #1a1a1a;
+    --button-bg:    #222;
+    --button-bg-h:  #2e2e2e;
+    --user-bg:      #181818;
+    --user-fg:      #bbb;
+    --user-border:  #555;
+    --back-bg:      #14241a;
+    --notes-bg:     #2a2410;
+    --notes-border: #666;
+    --error:        #f88;
 }
 
 body {

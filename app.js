@@ -276,14 +276,16 @@ function getTheme() {
     return THEME_CYCLE.includes(t) ? t : 'auto';
 }
 
+function resolveDark(theme) {
+    if (theme === 'dark')  return true;
+    if (theme === 'light') return false;
+    return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+}
+
 function applyTheme(t) {
-    if (t === 'auto') {
-        localStorage.removeItem(THEME_KEY);
-        document.documentElement.removeAttribute('data-theme');
-    } else {
-        localStorage.setItem(THEME_KEY, t);
-        document.documentElement.setAttribute('data-theme', t);
-    }
+    if (t === 'auto') localStorage.removeItem(THEME_KEY);
+    else              localStorage.setItem(THEME_KEY, t);
+    document.documentElement.classList.toggle('dark-mode', resolveDark(t));
     const btn = el('themeBtn');
     if (btn) btn.textContent = `theme: ${t}`;
 }
@@ -292,6 +294,12 @@ function cycleTheme() {
     const cur  = getTheme();
     const next = THEME_CYCLE[(THEME_CYCLE.indexOf(cur) + 1) % THEME_CYCLE.length];
     applyTheme(next);
+}
+
+// React to OS theme flips while in auto mode.
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)')
+        .addEventListener('change', () => { if (getTheme() === 'auto') applyTheme('auto'); });
 }
 
 // ---------- Boot ----------
