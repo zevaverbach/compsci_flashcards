@@ -20,25 +20,51 @@ files committed to the repo; spaced-repetition state lives in the browser's
 
 ## Adding cards
 
-Edit the SQLite file directly with any sqlite client. Schema:
+Each deck is a SQLite file in `cards/`. Schema:
 
-    cards(id INTEGER PK, front TEXT, back TEXT, notes TEXT, tags TEXT)
+    cards(id INTEGER PRIMARY KEY,
+          front TEXT,    -- prompt
+          back  TEXT,    -- canonical answer
+          notes TEXT,    -- optional explanation, shown after reveal
+          tags  TEXT)    -- optional, free-form
 
-Quick one-liner using Python:
+`id` is a stable handle: spaced-repetition progress is keyed by
+`<deck>:<id>`, so adding new rows leaves prior progress intact. **Don't
+renumber or reuse ids** — that will silently re-bind progress to different
+content.
 
-    python3 -c "
+### Insert one
+
+Pick the next id (`MAX(id) + 1`) and add a row. Easiest is a single Python
+invocation:
+
+    python3 - <<'PY'
     import sqlite3
     db = sqlite3.connect('cards/compsci.db')
+    next_id = (db.execute('SELECT COALESCE(MAX(id), 0) + 1 FROM cards').fetchone()[0])
     db.execute(
-        'INSERT INTO cards (front, back, notes, tags) VALUES (?, ?, ?, ?)',
-        ('question text', 'answer text', 'optional notes', 'optional,tags'),
+        'INSERT INTO cards (id, front, back, notes, tags) VALUES (?, ?, ?, ?, ?)',
+        (next_id, 'question text', 'answer text', 'optional notes', 'optional,tags'),
     )
     db.commit()
-    "
+    print('inserted id', next_id)
+    PY
 
-Then commit and push the updated `.db`. Existing SR progress is keyed by
-`<deck>:<id>`, so adding new rows leaves prior progress intact — but reusing
-or renumbering ids will silently re-bind them.
+Or with the `sqlite3` CLI:
+
+    sqlite3 cards/compsci.db \
+      "INSERT INTO cards (front, back, notes, tags) VALUES (
+         'question text', 'answer text', 'optional notes', 'optional,tags');"
+
+### Browse / edit / delete
+
+    sqlite3 cards/compsci.db "SELECT id, front FROM cards ORDER BY id;"
+    sqlite3 cards/compsci.db "UPDATE cards SET back='new answer' WHERE id=3;"
+    sqlite3 cards/compsci.db "DELETE FROM cards WHERE id=3;"
+
+After any change, commit the updated `.db` and push. Clients will pick up
+the new content the next time their IndexedDB cache for that file expires
+(7 days) or on hard-reload.
 
 ## Adding a new deck
 
